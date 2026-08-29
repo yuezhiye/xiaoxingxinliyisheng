@@ -1,0 +1,22 @@
+{
+  "name": "psych-docx-build",
+  "version": "1.0.0",
+  "description": "xiaoxingxinliyisheng 的构建器：从结构化数据生成技能参考文件（references/）与 82 页 Word 源文档（docs/）",
+  "scripts": {
+    "build:refs": "node gen-skill-refs.js",
+    "build:docx": "node build.js",
+    "test": "node gen-skill-refs.js && node build.js"
+  },
+  "keywords": [
+    "claude-code-skill",
+    "psychology",
+    "psychotherapy",
+    "counseling"
+  ],
+  "author": "yuezhiye",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "docx": "^9.7.1"
+  }
+}
