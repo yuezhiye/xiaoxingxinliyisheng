@@ -7,8 +7,10 @@ const {
   ExternalHyperlink
 } = require("docx");
 
-const therapistGroups = require("./data-therapists.js").concat(require("./data-therapists2.js"));
-const bookGroups = require("./data-books.js");
+const therapistGroups = require("./data-therapists.js")
+  .concat(require("./data-therapists2.js"))
+  .concat(require("./data-therapists3.js"));
+const bookGroups = require("./data-books.js").concat(require("./data-books2.js"));
 
 const FONT = "Microsoft YaHei";
 const BODY = 21;          // 10.5pt
@@ -71,7 +73,7 @@ const SP = () => P("", { after: 60 });
 const cover = [
   P("", { after: 1800 }),
   P("心理治疗师对话方法与心理学名著整理", { align: AlignmentType.CENTER, bold: true, size: 52, color: NAVY, after: 300 }),
-  P("—— 100位知名心理治疗师的治疗过程·行事风格·对话技术 + 50部经典著作 ——", { align: AlignmentType.CENTER, size: 26, color: "595959", after: 2400 }),
+  P("—— 150位知名心理治疗师的治疗过程·行事风格·对话技术 + 150部经典著作 ——", { align: AlignmentType.CENTER, size: 26, color: "595959", after: 2400 }),
   P("用途：为构建“AI心理医生角色扮演与心理疏导”技能（Skill）提供资料库", { align: AlignmentType.CENTER, size: 24, after: 160 }),
   P("内容：治疗师档案（按流派分组）· 著作整理 · 共性提炼与AI技能设计建议 · 伦理红线", { align: AlignmentType.CENTER, size: 22, color: "595959", after: 1600 }),
   P("编制日期：2026年8月29日　｜　资料来源：公开网络资料与经典文献整理", { align: AlignmentType.CENTER, size: 20, color: "808080" }),
@@ -90,8 +92,8 @@ const toc = [
 const preface = [
   H1("文档说明与使用方法"),
   P("本文档面向“让AI扮演心理医生、对用户进行心理疏导”的技能（Skill）开发场景，包含三大部分："),
-  Bullet("第一部分：100位知名心理治疗师档案，按18组流派分组（第1–9组为经典核心，第10–18组为扩展补充）。每份档案含：流派身份、代表著作、治疗过程、对话风格、标志性技术（附示例问句）、AI角色扮演要点。"),
-  Bullet("第二部分：50部知名心理学著作整理，按6大类编排，每部含核心内容与“对AI技能的借鉴点”。"),
+  Bullet("第一部分：150位知名心理治疗师档案，按27组流派分组（第1–9组为经典核心，第10–18组为扩展补充，第19–27组为动机科学·依恋情绪·积极心理学·儿童创伤养育与亚洲本土学者）。每份档案含：流派身份、代表著作、治疗过程、对话风格、标志性技术（附示例问句）、AI角色扮演要点。"),
+  Bullet("第二部分：150部知名心理学著作整理，按16大类编排，每部含核心内容与“对AI技能的借鉴点”。"),
   Bullet("第三部分：共性提炼——通用咨询流程、12项高频对话技术速查、流派风格光谱、议题-风格适配表、伦理与危机处理红线。这是开发Skill时最应优先转写进系统提示（system prompt）的内容。"),
   P("建议的使用方法：①先读第三部分，确定AI的默认风格配方与流程骨架；②再按目标用户的主要议题，从第一部分挑选2–4位治疗师作为风格原型，参考其“对话风格”与“示例问句”撰写人设提示词；③从第二部分书目中选取3–5本的“借鉴点”，扩充具体话术；④务必将第三部分第5节的伦理红线全部内置为硬规则。"),
   PageBreakP()
@@ -102,7 +104,7 @@ let no = 0;
 therapistGroups.forEach((g) => {
   g.members.forEach((m) => { m.no = ++no; });
 });
-const part1 = [H1("第一部分　100位知名心理治疗师档案"), P("共18组100人（第1–9组为经典核心大师，第10–18组为扩展补充，覆盖更多分支与当代人物）。每份档案结构：流派身份 → 代表著作 → 治疗过程 → 对话风格 → 标志性技术（含示例问句）→ AI角色扮演要点。")];
+const part1 = [H1("第一部分　150位知名心理治疗师档案"), P("共27组150人（第1–9组为经典核心大师，第10–18组为扩展补充，第19–27组为动机·依恋·积极心理·儿童创伤养育与亚洲本土学者）。每份档案结构：流派身份 → 代表著作 → 治疗过程 → 对话风格 → 标志性技术（含示例问句）→ AI角色扮演要点。")];
 therapistGroups.forEach((g, gi) => {
   part1.push(H2(g.title));
   part1.push(P(g.intro, { italics: true, color: "595959", size: 20 }));
@@ -122,7 +124,7 @@ part1.push(PageBreakP());
 
 // ---------- Part 2: books ----------
 const BW = [600, 2600, 1400, 2400, 2026];
-const part2 = [H1("第二部分　50部知名心理学著作整理"), P("共6大类50部，均为大众认可度高、与心理治疗对话直接相关的著作。表格列：书名（附原书名）→ 作者 → 核心内容与风格 → 对AI技能的借鉴点。")];
+const part2 = [H1("第二部分　150部知名心理学著作整理"), P("共16大类150部，均为大众认可度高、与心理治疗对话直接相关的著作（A–F类为经典50部，G–P类为新增100部）。表格列：书名（附原书名）→ 作者 → 核心内容与风格 → 对AI技能的借鉴点。")];
 let bookNo = 0;
 bookGroups.forEach(g => {
   part2.push(H2(g.cat));

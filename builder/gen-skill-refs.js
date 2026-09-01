@@ -1,21 +1,24 @@
-// 从治疗师源数据生成 skill 参考文件（therapists-1.md / therapists-2.md）
+// 从治疗师源数据生成 skill 参考文件（therapists-1.md / therapists-2.md / therapists-3.md）
 const fs = require("fs");
 const path = require("path");
-const groups = require("./data-therapists.js").concat(require("./data-therapists2.js"));
+const groups = require("./data-therapists.js")
+  .concat(require("./data-therapists2.js"))
+  .concat(require("./data-therapists3.js"));
 
 const OUT = path.join(__dirname, "..", "references");
 fs.mkdirSync(OUT, { recursive: true });
 
 let no = 0;
-const sec1 = [], sec2 = [];   // 正文（按组）
-const idx1 = [], idx2 = [];   // 快速索引行
+const sec1 = [], sec2 = [], sec3 = [];   // 正文（按组）
+const idx1 = [], idx2 = [], idx3 = [];   // 快速索引行
+const bucket = (n) => (n <= 50 ? 1 : n <= 100 ? 2 : 3);
 
 groups.forEach((g) => {
-  const body = [`## ${g.title.replace("（续）", "")}`, "", `> ${g.intro}`, ""];
+  const body = [`## ${g.title.replace("（续）", "").replace("（再续）", "")}`, "", `> ${g.intro}`, ""];
   g.members.forEach((m) => {
     m.no = ++no;
     const idxLine = `| ${m.no} | ${m.name} | ${m.school.split("、")[0]} |`;
-    (no <= 50 ? idx1 : idx2).push(idxLine);
+    [idx1, idx2, idx3][bucket(m.no) - 1].push(idxLine);
     body.push(`### ${m.no}　${m.name}｜${m.en}`);
     body.push(`- **流派身份**：${m.school}`);
     body.push(`- **代表著作**：${m.works}`);
@@ -26,7 +29,7 @@ groups.forEach((g) => {
     body.push(`- **AI角色扮演要点**：${m.ai}`);
     body.push("");
   });
-  (no <= 50 ? sec1 : sec2).push(...body);
+  [sec1, sec2, sec3][bucket(no) - 1].push(...body);
 });
 
 const header = (title, idx) => [
@@ -46,8 +49,12 @@ fs.writeFileSync(path.join(OUT, "therapists-1.md"),
   header("治疗师档案库 · 第1–50位（经典核心）", idx1) + sec1.join("\n"));
 fs.writeFileSync(path.join(OUT, "therapists-2.md"),
   header("治疗师档案库 · 第51–100位（扩展补充）", idx2) + sec2.join("\n"));
+fs.writeFileSync(path.join(OUT, "therapists-3.md"),
+  header("治疗师档案库 · 第101–150位（动机·依恋·积极心理·本土心理学者）", idx3) + sec3.join("\n"));
 
-console.log("idx1:", idx1.length, "idx2:", idx2.length);
+console.log("idx1:", idx1.length, "idx2:", idx2.length, "idx3:", idx3.length);
 console.log("last-1:", idx1[idx1.length - 1]);
 console.log("first-2:", idx2[0]);
 console.log("last-2:", idx2[idx2.length - 1]);
+console.log("first-3:", idx3[0]);
+console.log("last-3:", idx3[idx3.length - 1]);
